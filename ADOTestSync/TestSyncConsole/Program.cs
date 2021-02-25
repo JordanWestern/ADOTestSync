@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.IO;
+using TestSyncConsole.Services;
 
 namespace TestSyncConsole
 {
@@ -24,11 +25,12 @@ namespace TestSyncConsole
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<IConsoleArguments>(new ConsoleArguments(args));
+                    services.AddHttpClient<AzureService>();
                 })
                 .UseSerilog()
                 .Build();
 
-            //var test = ActivatorUtilities.CreateInstance<IConsoleArguments>(host.Services);
+            //var test = ActivatorUtilities.CreateInstance<AzureService>(host.Services);
 
             //azureService.UploadTests();
         }
