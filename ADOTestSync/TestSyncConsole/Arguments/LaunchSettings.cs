@@ -4,7 +4,7 @@ namespace TestSyncConsole
 {
     public class LaunchSettings : ILaunchSettings
     {
-        public Arguments Arguments { get; private set; }
+        public IArguments Arguments { get; private set; }
 
         public LaunchSettings(string[] args)
         {
