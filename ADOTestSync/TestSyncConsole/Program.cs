@@ -3,13 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TestSyncConsole.Services;
+using TestSyncConsole.WorkItem;
 
 namespace TestSyncConsole
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var configurationBuilder = new ConfigurationBuilder();
 
@@ -26,13 +29,20 @@ namespace TestSyncConsole
                 {
                     services.AddSingleton<ILaunchSettings>(new LaunchSettings(args));
                     services.AddTransient<IAzureService, AzureService>();
+                    services.AddTransient<IWorkItemTracker, WorkItemTracker>();
                 })
                 .UseSerilog()
                 .Build();
 
-            var test = ActivatorUtilities.CreateInstance<AzureService>(host.Services);
+            Log.Logger.Information("Starting service...");
 
-            //azureService.UploadTests();
+            var workItemTracker = ActivatorUtilities.CreateInstance<WorkItemTracker>(host.Services);
+
+            Log.Logger.Information("Posting work item query: {0}", nameof(WorkItemQuery.GetAutomatedTestCases));
+
+            var result = await workItemTracker.PostWorkItemQueryAsync(WorkItemQuery.GetAutomatedTestCases);
+
+            Log.Logger.Information("Sucessfully retrieved {0} test cases", result.WorkItems.Count());
         }
 
         static void BuildConfiguration(IConfigurationBuilder configurationBuilder)

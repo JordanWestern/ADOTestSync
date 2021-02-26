@@ -1,5 +1,4 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using Newtonsoft.Json;
+﻿using Serilog;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -22,7 +21,7 @@ namespace TestSyncConsole.Services
             httpClient.BaseAddress = new Uri("https://dev.azure.com/");
 
             httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json-patch+json"));
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(
@@ -30,10 +29,21 @@ namespace TestSyncConsole.Services
                         string.Format("{0}:{1}", "", launchSettings.Arguments.PersonalAccessToken))));
         }
 
-        public async Task<WorkItemQueryResult> PostWorkItemQueryAsync(Wiql workItemQueryLanguage)
+        public async Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value)
         {
-            return JsonConvert.DeserializeObject<WorkItemQueryResult>(
-                await this.httpClient.PostAsJsonAsync("{organization}/{project}/{team}/_apis/wit/wiql?api-version=6.0", workItemQueryLanguage.Query).Result.Content.ReadAsStringAsync());
+            var result =  await this.httpClient.PostAsJsonAsync(requestUri, value);
+
+            try
+            {
+                result.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                Log.Logger.Error($"The request to {result.RequestMessage.RequestUri} failed: {e.Message}");
+                throw e;
+            }
+
+            return result;
         }
 
         private HttpClientHandler ConfigureClientHandler(ILaunchSettings launchSettings)

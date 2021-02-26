@@ -1,10 +1,10 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace TestSyncConsole.Services
 {
     public interface IAzureService
     {
-        Task<WorkItemQueryResult> PostWorkItemQueryAsync(Wiql workItemQueryLanguage);
+        Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value);
     }
 }
