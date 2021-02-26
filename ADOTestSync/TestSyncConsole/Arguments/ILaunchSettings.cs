@@ -2,6 +2,6 @@
 {
     public interface ILaunchSettings
     {
-        Arguments Properties { get; }
+        Arguments Arguments { get; }
     }
 }

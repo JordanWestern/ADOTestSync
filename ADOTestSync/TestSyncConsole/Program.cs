@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.IO;
-using System.Net.Http;
 using TestSyncConsole.Services;
 
 namespace TestSyncConsole

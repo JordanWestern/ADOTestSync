@@ -27,7 +27,7 @@ namespace TestSyncConsole.Services
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(
                     Encoding.ASCII.GetBytes(
-                        string.Format("{0}:{1}", "", launchSettings.Properties.PersonalAccessToken))));
+                        string.Format("{0}:{1}", "", launchSettings.Arguments.PersonalAccessToken))));
         }
 
         public async Task<WorkItemQueryResult> PostWorkItemQueryAsync(Wiql workItemQueryLanguage)
@@ -40,14 +40,14 @@ namespace TestSyncConsole.Services
         {
             var clientHandler = new HttpClientHandler();
 
-            if (launchSettings.Properties.ProxyHost != null && launchSettings.Properties.ProxyPort != 0)
+            if (launchSettings.Arguments.ProxyHost != null && launchSettings.Arguments.ProxyPort != 0)
             {
-                clientHandler.Proxy = new WebProxy(launchSettings.Properties.ProxyHost, launchSettings.Properties.ProxyPort);
+                clientHandler.Proxy = new WebProxy(launchSettings.Arguments.ProxyHost, launchSettings.Arguments.ProxyPort);
             }
 
-            if (launchSettings.Properties.ProxyUsername != null && launchSettings.Properties.ProxyPassword != null)
+            if (launchSettings.Arguments.ProxyUsername != null && launchSettings.Arguments.ProxyPassword != null)
             {
-                clientHandler.Credentials = new NetworkCredential(launchSettings.Properties.ProxyUsername, launchSettings.Properties.ProxyPassword);
+                clientHandler.Credentials = new NetworkCredential(launchSettings.Arguments.ProxyUsername, launchSettings.Arguments.ProxyPassword);
             }
 
             return clientHandler;
