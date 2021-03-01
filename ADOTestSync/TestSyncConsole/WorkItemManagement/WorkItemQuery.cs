@@ -1,6 +1,6 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
-namespace TestSyncConsole.WorkItem
+namespace TestSyncConsole.WorkItemTracking
 {
     static class WorkItemQuery
     {

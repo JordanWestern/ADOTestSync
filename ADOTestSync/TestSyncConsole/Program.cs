@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using TestSyncConsole.Controllers;
 using TestSyncConsole.Services;
-using TestSyncConsole.WorkItem;
+using TestSyncConsole.WorkItemTracking;
 
 namespace TestSyncConsole
 {
@@ -30,19 +30,25 @@ namespace TestSyncConsole
                     services.AddSingleton<ILaunchSettings>(new LaunchSettings(args));
                     services.AddTransient<IAzureService, AzureService>();
                     services.AddTransient<IWorkItemTracker, WorkItemTracker>();
+                    services.AddTransient<ITestPlansController, TestPlansController>();
                 })
                 .UseSerilog()
                 .Build();
 
             Log.Logger.Information("Starting service...");
 
-            var workItemTracker = ActivatorUtilities.CreateInstance<WorkItemTracker>(host.Services);
+            var testPlansController = ActivatorUtilities.CreateInstance<TestPlansController>(host.Services);
 
-            Log.Logger.Information("Posting work item query: {0}", nameof(WorkItemQuery.GetAutomatedTestCases));
+            Log.Information("Fetching test cases...");
 
-            var result = await workItemTracker.PostWorkItemQueryAsync(WorkItemQuery.GetAutomatedTestCases);
+            var testcases = await testPlansController.GetAutomatedTestCasesAsync();
 
-            Log.Logger.Information("Sucessfully retrieved {0} test cases", result.WorkItems.Count());
+            Log.Information("Retrieved {0} test cases from Azure:", testcases.Count);
+
+            foreach (var testCase in testcases)
+            {
+                Log.Information("ID: {0} - Title: {1}", testCase.Id, testCase.Fields["System.Title"]);
+            }
         }
 
         static void BuildConfiguration(IConfigurationBuilder configurationBuilder)
