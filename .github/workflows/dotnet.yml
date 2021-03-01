@@ -19,4 +19,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./ADOTestSync/TestSyncConsole/TestSyncConsole.csproj
     - name: Build
-      run: dotnet build ADOTestSync.sln --no-restore
+      run: dotnet build ./ADOTestSync/TestSyncConsole/TestSyncConsole.csproj --no-restore
