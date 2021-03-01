@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using TestSyncConsole.Controllers;
@@ -53,8 +54,15 @@ namespace TestSyncConsole
 
         static void BuildConfiguration(IConfigurationBuilder configurationBuilder)
         {
-            configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+            configurationBuilder.SetBasePath(GetBasePath())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        }
+
+        //TODO: Look into getting the working directory for the published package as Directory.GetCurrentDirectory() does not do the trick!
+        static string GetBasePath() 
+        {
+            using var processModule = Process.GetCurrentProcess().MainModule;
+            return Path.GetDirectoryName(processModule?.FileName);
         }
     }
 }
