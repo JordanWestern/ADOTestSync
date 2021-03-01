@@ -17,6 +17,6 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./ADOTestSync/TestSyncConsole/TestSyncConsole.csproj
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ADOTestSync.sln --no-restore
