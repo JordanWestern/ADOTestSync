@@ -15,5 +15,9 @@
         int ProxyPort { get; set; }
 
         string ProxyUsername { get; set; }
+
+        TestStrategy TestStratgey { get; set; }
+
+        string AssemblyPath { get; set; }
     }
 }

@@ -13,6 +13,12 @@
         [Option(longName: "token", Required = true, HelpText = "The personal access token required to authenticate with your Azure DevOps project")]
         public string PersonalAccessToken { get; set; }
 
+        [Option(longName: "assembly", Required = true, HelpText = "The path to the assembly containing your UI tests")]
+        public string AssemblyPath { get; set; }
+
+        [Option(longName: "test-strategy", Required = true, HelpText = "The test runner used to execute your tests (i.e. SpecFlow+ Runner, NUnit etc.)")]
+        public TestStrategy TestStratgey { get; set; }
+
         [Option(longName: "proxy", Required = false, HelpText = "The proxy URI if a web proxy is required")]
         public string ProxyHost { get; set; }
 
