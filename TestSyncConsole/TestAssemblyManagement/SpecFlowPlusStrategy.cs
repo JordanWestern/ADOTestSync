@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
 
@@ -42,13 +43,26 @@
 
         private string GetScenarioTitle(MethodInfo methodInfo)
         {
-            return methodInfo.CustomAttributes.ElementAt(0).ConstructorArguments.Where(arg => arg.ArgumentType.Equals("String")).First().Value.ToString();
+            return methodInfo.CustomAttributes.ElementAt(0).ConstructorArguments
+                .Where(arg => arg.ArgumentType.Name.Equals("String"))
+                .Single().Value.ToString();
         }
 
         private string[] GetScenarioTags(MethodInfo methodInfo)
         {
-            // TODO: cast to string[] fails
-            return (string[])methodInfo.CustomAttributes.ElementAt(0).ConstructorArguments.Where(arg => arg.ArgumentType.Equals("String[]")).First().Value;
+            var tags = new List<string>();
+
+            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.CustomAttributes.Single(x => x.AttributeType.Name.Equals(ScenarioAttribute)).ConstructorArguments
+                .Where(arg => arg.ArgumentType.Name.Equals("String[]"))
+                .Single().Value)
+                .Select(item => item.Value.ToString()));
+
+            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.DeclaringType.CustomAttributes.Single(x => x.AttributeType.Name.Equals(FeatureAttribute)).ConstructorArguments
+                .Where(arg => arg.ArgumentType.Name.Equals("String[]"))
+                .Single().Value)
+                .Select(item => item.Value.ToString()));
+
+            return tags.ToArray();
         }
     }
 }
