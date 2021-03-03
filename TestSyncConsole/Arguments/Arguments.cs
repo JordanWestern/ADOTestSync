@@ -1,7 +1,7 @@
-﻿using CommandLine;
-
-namespace TestSyncConsole
+﻿namespace TestSyncConsole
 {
+    using CommandLine;
+
     public class Arguments : IArguments
     {
         [Option(longName: "organisation", Required = true, HelpText = "The name of your Azure DevOps organisation")]

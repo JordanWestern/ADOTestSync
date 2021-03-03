@@ -1,19 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using TestSyncConsole.Controllers;
-using TestSyncConsole.Services;
-using TestSyncConsole.WorkItemTracking;
-
-namespace TestSyncConsole
+﻿namespace TestSyncConsole
 {
-    class Program
+    using System.Diagnostics;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+    using TestSyncConsole.Controllers;
+    using TestSyncConsole.Services;
+    using TestSyncConsole.WorkItemTracking;
+
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var configurationBuilder = new ConfigurationBuilder();
 
@@ -52,14 +52,14 @@ namespace TestSyncConsole
             }
         }
 
-        static void BuildConfiguration(IConfigurationBuilder configurationBuilder)
+        private static void BuildConfiguration(IConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.SetBasePath(GetBasePath())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         }
 
-        //TODO: Look into getting the working directory for the published package as Directory.GetCurrentDirectory() does not do the trick!
-        static string GetBasePath() 
+        // TODO: Look into getting the working directory for the published package as Directory.GetCurrentDirectory() does not do the trick!
+        private static string GetBasePath()
         {
             using var processModule = Process.GetCurrentProcess().MainModule;
             return Path.GetDirectoryName(processModule?.FileName);

@@ -1,8 +1,8 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using Newtonsoft.Json;
-
-namespace TestSyncConsole.WorkItemManagement
+﻿namespace TestSyncConsole.WorkItemManagement
 {
+    using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using Newtonsoft.Json;
+
     public class WorkItemBatchGetResponse
     {
         [JsonProperty("value")]

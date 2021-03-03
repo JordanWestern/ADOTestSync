@@ -1,12 +1,12 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TestSyncConsole.WorkItemManagement;
-using TestSyncConsole.WorkItemTracking;
-
-namespace TestSyncConsole.Controllers
+﻿namespace TestSyncConsole.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using TestSyncConsole.WorkItemManagement;
+    using TestSyncConsole.WorkItemTracking;
+
     public class TestPlansController : ITestPlansController
     {
         private readonly IWorkItemTracker workItemTracker;

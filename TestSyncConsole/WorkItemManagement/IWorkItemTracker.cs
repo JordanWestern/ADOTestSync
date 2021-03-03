@@ -1,12 +1,13 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using System.Threading.Tasks;
-using TestSyncConsole.WorkItemManagement;
-
-namespace TestSyncConsole.WorkItemTracking
+﻿namespace TestSyncConsole.WorkItemTracking
 {
+    using System.Threading.Tasks;
+    using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using TestSyncConsole.WorkItemManagement;
+
     public interface IWorkItemTracker
     {
         Task<WorkItemBatchGetResponse> PostWorkItemBatchQueryAsync(WorkItemBatchGetRequest workItemBatchGetRequest);
+
         Task<WorkItemQueryResult> PostWorkItemQueryAsync(Wiql workItemQueryLanguage);
     }
 }

@@ -1,13 +1,13 @@
-﻿using Serilog;
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestSyncConsole.Services
+﻿namespace TestSyncConsole.Services
 {
+    using System;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Serilog;
+
     public class AzureService : IAzureService
     {
         private readonly HttpClient httpClient;
@@ -16,22 +16,24 @@ namespace TestSyncConsole.Services
         {
             var clientHandler = this.ConfigureClientHandler(launchSettings);
 
-            this.httpClient = new HttpClient(clientHandler);
+            this.httpClient = new HttpClient(clientHandler)
+            {
+                BaseAddress = new Uri("https://dev.azure.com/")
+            };
 
-            httpClient.BaseAddress = new Uri("https://dev.azure.com/");
-
-            httpClient.DefaultRequestHeaders.Accept.Add(
+            this.httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json-patch+json"));
 
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+            this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Basic",
                 Convert.ToBase64String(
                     Encoding.ASCII.GetBytes(
-                        string.Format("{0}:{1}", "", launchSettings.Arguments.PersonalAccessToken))));
+                        string.Format("{0}:{1}", string.Empty, launchSettings.Arguments.PersonalAccessToken))));
         }
 
         public async Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value)
         {
-            var result =  await this.httpClient.PostAsJsonAsync(requestUri, value);
+            var result = await this.httpClient.PostAsJsonAsync(requestUri, value);
 
             try
             {

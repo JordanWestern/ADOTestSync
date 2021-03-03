@@ -1,11 +1,11 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using TestSyncConsole.Services;
-using TestSyncConsole.WorkItemManagement;
-
-namespace TestSyncConsole.WorkItemTracking
+﻿namespace TestSyncConsole.WorkItemTracking
 {
+    using System.Threading.Tasks;
+    using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using Newtonsoft.Json;
+    using TestSyncConsole.Services;
+    using TestSyncConsole.WorkItemManagement;
+
     public class WorkItemTracker : IWorkItemTracker
     {
         private readonly IAzureService azureService;

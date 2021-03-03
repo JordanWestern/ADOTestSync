@@ -1,9 +1,9 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace TestSyncConsole.Controllers
+﻿namespace TestSyncConsole.Controllers
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+
     public interface ITestPlansController
     {
         Task<List<WorkItem>> GetAutomatedTestCasesAsync();
