@@ -4,7 +4,7 @@
 
     public class UITest
     {
-        public string ScenarioTitle { get; set; }
+        public string ScenarioName { get; set; }
 
         public string FullyQualifiedName { get; set; }
 
