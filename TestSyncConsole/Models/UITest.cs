@@ -10,6 +10,8 @@
 
         public string[] Tags { get; set; }
 
+        public string Module { get; set; }
+
         public Guid Guid { get; set; }
     }
 }

@@ -9,6 +9,7 @@
     using Serilog;
     using TestSyncConsole.Controllers;
     using TestSyncConsole.Services;
+    using TestSyncConsole.TestAssemblyManagement;
     using TestSyncConsole.WorkItemTracking;
 
     internal class Program
@@ -32,24 +33,16 @@
                     services.AddTransient<IAzureService, AzureService>();
                     services.AddTransient<IWorkItemTracker, WorkItemTracker>();
                     services.AddTransient<ITestPlansController, TestPlansController>();
+                    services.AddTransient<ITestAssembly, TestAssembly>();
                 })
                 .UseSerilog()
                 .Build();
 
             Log.Logger.Information("Starting service...");
 
-            var testPlansController = ActivatorUtilities.CreateInstance<TestPlansController>(host.Services);
+            var testAssembly = ActivatorUtilities.CreateInstance<TestAssembly>(host.Services);
 
-            Log.Information("Fetching test cases...");
-
-            var testcases = await testPlansController.GetAutomatedTestCasesAsync();
-
-            Log.Information("Retrieved {0} test cases from Azure:", testcases.Count);
-
-            foreach (var testCase in testcases)
-            {
-                Log.Information("ID: {0} - Title: {1}", testCase.Id, testCase.Fields["System.Title"]);
-            }
+            testAssembly.GetTestMethods();
         }
 
         private static void BuildConfiguration(IConfigurationBuilder configurationBuilder)

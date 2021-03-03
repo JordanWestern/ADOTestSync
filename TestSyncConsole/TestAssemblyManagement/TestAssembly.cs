@@ -1,11 +1,11 @@
-﻿namespace TestSyncConsole.TestAssemblies
+﻿namespace TestSyncConsole.TestAssemblyManagement
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using Serilog;
-    using TestSyncConsole.TestAssemblyManagement;
 
-    public class TestAssembly
+    public class TestAssembly : ITestAssembly
     {
         private readonly string assemblyPath;
         private readonly TestStrategy testStrategy;
@@ -16,13 +16,13 @@
             this.testStrategy = launchSettings.Arguments.TestStratgey;
         }
 
-        public UITest[] GetTestMethods()
+        public IEnumerable<UITest> GetTestMethods()
         {
             Assembly assembly;
 
             try
             {
-                assembly = Assembly.LoadFile(this.assemblyPath);
+                assembly = Assembly.LoadFrom(this.assemblyPath);
             }
             catch (Exception e)
             {
@@ -33,8 +33,9 @@
             ITestStrategy testStrategy = this.testStrategy switch
             {
                 TestStrategy.NUnit => new NUnitStrategy(),
-                _ => new SpecFlowPlusStrategy(),
+                _ => new SpecflowPlusStrategy()
             };
+
             return testStrategy.GetTests(assembly);
         }
     }

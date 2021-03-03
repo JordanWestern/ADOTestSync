@@ -2,7 +2,7 @@
 {
     public enum TestStrategy
     {
-        SpecFlowPlusRunner,
+        SpecflowPlusRunner,
         NUnit
     }
 }
