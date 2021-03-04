@@ -1,4 +1,4 @@
-﻿namespace TestSyncConsole.TestAssemblyManagement
+﻿namespace TestSyncConsole.TestAssemblies
 {
     using System;
     using System.Collections.Generic;
@@ -6,20 +6,19 @@
     using System.Linq;
     using System.Reflection;
     using System.Web;
+    using TestSyncConsole.Constants;
+    using TestSyncConsole.Extensions;
 
     public class SpecflowPlusStrategy : ITestStrategy
     {
-        private const string FeatureAttribute = "FeatureAttribute";
-        private const string ScenarioAttribute = "ScenarioAttribute";
-        private const string FqnFormat = "{0}.{1}.#()::TestAssembly:{2}/Feature:{3}/Scenario:{4}";
-
+        // TODO: Pull out steps somehow....
         public IEnumerable<UITest> GetTests(Assembly testAssembly)
         {
             var tests = new List<UITest>();
 
-            foreach (var type in this.GetTypes(testAssembly))
+            foreach (var type in this.GetTypesWithFeatureAttribute(testAssembly))
             {
-                foreach (var methodInfo in this.GetMethodInfos(type))
+                foreach (var methodInfo in this.GetMethodInfosWithScenarioAttribute(type))
                 {
                     var featureName = this.GetFeatureName(methodInfo);
                     var scenarioName = this.GetScenarioName(methodInfo);
@@ -31,9 +30,7 @@
                         Tags = this.GetScenarioTags(methodInfo),
                         Module = methodInfo.Module.Name,
                         FullyQualifiedName = fqn,
-
-                        // TODO: Generate GUID or hash unique for each test
-                        // Guid = new Guid()
+                        Guid = fqn.GenerateGuid()
                     });
                 }
             }
@@ -41,19 +38,22 @@
             return tests;
         }
 
-        private IEnumerable<Type> GetTypes(Assembly assembly)
+        private IEnumerable<Type> GetTypesWithFeatureAttribute(Assembly assembly)
         {
-            return assembly.GetTypes().Where(t => t.CustomAttributes.Any(customAttribute => customAttribute.AttributeType.Name.Equals(FeatureAttribute)));
+            return assembly.GetTypes()
+                .Where(t => t.CustomAttributes.Any(customAttribute => customAttribute.AttributeType.Name.Equals(SpecflowPlusConstants.FeatureAttribute)));
         }
 
-        private IEnumerable<MethodInfo> GetMethodInfos(Type type)
+        private IEnumerable<MethodInfo> GetMethodInfosWithScenarioAttribute(Type type)
         {
-            return type.GetMethods().Where(methodInfo => methodInfo.CustomAttributes.Any(customAttribute => customAttribute.AttributeType.Name.Equals(ScenarioAttribute)));
+            return type.GetMethods()
+                .Where(methodInfo => methodInfo.CustomAttributes.Any(customAttribute => customAttribute.AttributeType.Name.Equals(SpecflowPlusConstants.ScenarioAttribute)));
         }
 
         private string GetScenarioName(MethodInfo methodInfo)
         {
-            return methodInfo.CustomAttributes.Single(x => x.AttributeType.Name.Equals(ScenarioAttribute)).ConstructorArguments
+            return methodInfo.CustomAttributes
+                .Single(x => x.AttributeType.Name.Equals(SpecflowPlusConstants.ScenarioAttribute)).ConstructorArguments
                 .Where(arg => arg.ArgumentType.Name.Equals("String"))
                 .Single().Value.ToString();
         }
@@ -62,12 +62,14 @@
         {
             var tags = new List<string>();
 
-            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.CustomAttributes.Single(x => x.AttributeType.Name.Equals(ScenarioAttribute)).ConstructorArguments
+            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.CustomAttributes
+                .Single(x => x.AttributeType.Name.Equals(SpecflowPlusConstants.ScenarioAttribute)).ConstructorArguments
                 .Where(arg => arg.ArgumentType.Name.Equals("String[]"))
                 .Single().Value)
                 .Select(item => item.Value.ToString()));
 
-            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.DeclaringType.CustomAttributes.Single(x => x.AttributeType.Name.Equals(FeatureAttribute)).ConstructorArguments
+            tags.AddRange(((ReadOnlyCollection<CustomAttributeTypedArgument>)methodInfo.DeclaringType.CustomAttributes
+                .Single(x => x.AttributeType.Name.Equals(SpecflowPlusConstants.FeatureAttribute)).ConstructorArguments
                 .Where(arg => arg.ArgumentType.Name.Equals("String[]"))
                 .Single().Value)
                 .Select(item => item.Value.ToString()));
@@ -77,14 +79,21 @@
 
         private string GetFeatureName(MethodInfo methodInfo)
         {
-            return methodInfo.DeclaringType.CustomAttributes.Single(x => x.AttributeType.Name.Equals(FeatureAttribute)).ConstructorArguments
+            return methodInfo.DeclaringType.CustomAttributes
+                .Single(x => x.AttributeType.Name.Equals(SpecflowPlusConstants.FeatureAttribute)).ConstructorArguments
                 .Where(arg => arg.ArgumentType.Name.Equals("String"))
                 .Single().Value.ToString();
         }
 
         private string GetFullyQualifiedName(string projectName, string featureName, string scenarioName)
         {
-            return string.Format(FqnFormat, projectName, featureName, projectName, HttpUtility.UrlEncode(featureName), HttpUtility.UrlEncode(scenarioName));
+            return string.Format(
+                SpecflowPlusConstants.FullyQualifiedNameFormat,
+                projectName,
+                featureName,
+                projectName,
+                HttpUtility.UrlEncode(featureName),
+                HttpUtility.UrlEncode(scenarioName));
         }
     }
 }

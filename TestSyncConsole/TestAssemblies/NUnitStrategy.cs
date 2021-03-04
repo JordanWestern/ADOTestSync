@@ -1,4 +1,4 @@
-﻿namespace TestSyncConsole.TestAssemblyManagement
+﻿namespace TestSyncConsole.TestAssemblies
 {
     using System;
     using System.Collections.Generic;

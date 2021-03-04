@@ -1,4 +1,4 @@
-﻿namespace TestSyncConsole.Controllers
+﻿namespace TestSyncConsole.TestPlans
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -6,6 +6,6 @@
 
     public interface ITestPlansController
     {
-        Task<List<WorkItem>> GetAutomatedTestCasesAsync();
+        Task<IEnumerable<WorkItem>> GetAutomatedTestCasesAsync();
     }
 }

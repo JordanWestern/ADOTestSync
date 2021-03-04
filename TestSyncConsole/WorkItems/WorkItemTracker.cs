@@ -1,4 +1,4 @@
-﻿namespace TestSyncConsole.WorkItemTracking
+﻿namespace TestSyncConsole.WorkItems
 {
     using System.Threading.Tasks;
     using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;

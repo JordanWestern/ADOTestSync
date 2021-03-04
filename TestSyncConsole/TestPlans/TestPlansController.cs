@@ -1,11 +1,12 @@
-﻿namespace TestSyncConsole.Controllers
+﻿namespace TestSyncConsole.TestPlans
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using TestSyncConsole.Constants;
     using TestSyncConsole.WorkItemManagement;
-    using TestSyncConsole.WorkItemTracking;
+    using TestSyncConsole.WorkItems;
 
     public class TestPlansController : ITestPlansController
     {
@@ -16,19 +17,25 @@
             this.workItemTracker = workItemTracker;
         }
 
-        public async Task<List<WorkItem>> GetAutomatedTestCasesAsync()
+        public async Task<IEnumerable<WorkItem>> GetAutomatedTestCasesAsync()
         {
             var workItemBatchQueries = new List<Task<WorkItemBatchGetResponse>>();
-
             var workItemQueryResult = await this.workItemTracker.PostWorkItemQueryAsync(WorkItemQuery.GetAutomatedTestCases);
-
             var workItemCount = workItemQueryResult.WorkItems.Count();
 
             for (int i = 0; i < workItemCount; i += 200)
             {
                 var request = new WorkItemBatchGetRequest
                 {
-                    Fields = new string[] { "System.Title" },
+                    Fields = new string[]
+                    {
+                        WorkItemFields.Title,
+                        WorkItemFields.AutomatedTestStorage,
+                        WorkItemFields.AutomatedTestName,
+                        WorkItemFields.Tags,
+                        WorkItemFields.AutomatedTestId
+                    },
+
                     Ids = workItemQueryResult.WorkItems.Skip(i).Take(200).Select(workItem => workItem.Id)
                 };
 

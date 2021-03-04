@@ -7,10 +7,10 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Serilog;
-    using TestSyncConsole.Controllers;
     using TestSyncConsole.Services;
-    using TestSyncConsole.TestAssemblyManagement;
-    using TestSyncConsole.WorkItemTracking;
+    using TestSyncConsole.TestAssemblies;
+    using TestSyncConsole.TestPlans;
+    using TestSyncConsole.WorkItems;
 
     internal class Program
     {
@@ -34,15 +34,12 @@
                     services.AddTransient<IWorkItemTracker, WorkItemTracker>();
                     services.AddTransient<ITestPlansController, TestPlansController>();
                     services.AddTransient<ITestAssembly, TestAssembly>();
+                    services.AddTransient<IExecutor, Executor>();
                 })
                 .UseSerilog()
                 .Build();
 
-            Log.Logger.Information("Starting service...");
-
-            var testAssembly = ActivatorUtilities.CreateInstance<TestAssembly>(host.Services);
-
-            testAssembly.GetTestMethods();
+            await ActivatorUtilities.CreateInstance<Executor>(host.Services).ExecuteAsync();
         }
 
         private static void BuildConfiguration(IConfigurationBuilder configurationBuilder)
