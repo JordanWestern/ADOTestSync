@@ -1,9 +1,13 @@
 ﻿namespace TestSyncConsole.TestPlans
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+    using Microsoft.VisualStudio.Services.WebApi.Patch;
+    using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
+    using Serilog;
     using TestSyncConsole.Constants;
     using TestSyncConsole.WorkItemManagement;
     using TestSyncConsole.WorkItems;
@@ -52,6 +56,67 @@
             }
 
             return workItems;
+        }
+
+        public async Task UploadTestCasesAsync(IEnumerable<UITest> uITests)
+        {
+            foreach (var uITest in uITests)
+            {
+                if (uITest.ExceedsCharLimit)
+                {
+                    Log.Error("The fully qualified name for {0} exceeds the character limit and will be excluded from the upload", uITest.ScenarioName);
+                    return;
+                }
+
+                var jsonPatchOperations = new JsonPatchDocument
+                {
+                    new JsonPatchOperation
+                    {
+                        Value = uITest.ScenarioName,
+                        From = null,
+                        Operation = Operation.Add,
+                        Path = $"/fields/{WorkItemFields.Title}"
+                    },
+                    new JsonPatchOperation
+                    {
+                        Value = uITest.Module,
+                        From = null,
+                        Operation = Operation.Add,
+                        Path = $"/fields/{WorkItemFields.AutomatedTestStorage}"
+                    },
+                    new JsonPatchOperation
+                    {
+                        Value = uITest.FullyQualifiedName,
+                        From = null,
+                        Operation = Operation.Add,
+                        Path = $"/fields/{WorkItemFields.AutomatedTestName}"
+                    },
+                    new JsonPatchOperation
+                    {
+                        Value = string.Join(";", uITest.Tags),
+                        From = null,
+                        Operation = Operation.Add,
+                        Path = $"/fields/{WorkItemFields.Tags}"
+                    },
+                    new JsonPatchOperation
+                    {
+                        Value = uITest.Guid,
+                        From = null,
+                        Operation = Operation.Add,
+                        Path = $"/fields/{WorkItemFields.AutomatedTestId}"
+                    }
+                };
+
+                try
+                {
+                    await this.workItemTracker.CreateWorkItemAsync(jsonPatchOperations, WorkItemTypes.TestCase);
+                    Log.Information("Uploaded {0} successfully", uITest.ScenarioName);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "There was an issue uploading {0}", uITest.ScenarioName);
+                }
+            }
         }
     }
 }

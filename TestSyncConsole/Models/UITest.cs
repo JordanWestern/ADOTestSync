@@ -13,5 +13,7 @@
         public string Module { get; set; }
 
         public Guid Guid { get; set; }
+
+        public bool ExceedsCharLimit => this.FullyQualifiedName.Length > 256;
     }
 }

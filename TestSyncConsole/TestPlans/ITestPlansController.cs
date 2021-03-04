@@ -7,5 +7,6 @@
     public interface ITestPlansController
     {
         Task<IEnumerable<WorkItem>> GetAutomatedTestCasesAsync();
+        Task UploadTestCasesAsync(IEnumerable<UITest> uITests);
     }
 }

@@ -45,8 +45,7 @@
             if (notInAzureCount > 0)
             {
                 Log.Information("{0} tests from your assembly are missing from Azure and will be uploaded", notInAzureCount);
-
-                // Upload the tests to azure
+                await this.testPlansController.UploadTestCasesAsync(notInAzure);
             }
 
             if (notInAssemblyCount > 0)

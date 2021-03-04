@@ -5,6 +5,8 @@
 
     public interface IAzureService
     {
-        Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value);
+        Task<HttpResponseMessage> PostAsJsonAsync<T>(string requestUri, T value);
+
+        Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent value);
     }
 }

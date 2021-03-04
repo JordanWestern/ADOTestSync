@@ -6,7 +6,6 @@
     using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
-    using Serilog;
 
     public class AzureService : IAzureService
     {
@@ -31,20 +30,19 @@
                         string.Format("{0}:{1}", string.Empty, launchSettings.Arguments.PersonalAccessToken))));
         }
 
-        public async Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value)
+        // Need to see why this fails when value is a json patch...
+        public async Task<HttpResponseMessage> PostAsJsonAsync<T>(string requestUri, T value)
         {
             var result = await this.httpClient.PostAsJsonAsync(requestUri, value);
+            result.EnsureSuccessStatusCode();
+            return result;
+        }
 
-            try
-            {
-                result.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException e)
-            {
-                Log.Logger.Error($"The request to {result.RequestMessage.RequestUri} failed: {e.Message}");
-                throw e;
-            }
-
+        // Workaround for now until a solution is found for the above ^^
+        public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent value)
+        {
+            var result = await this.httpClient.PostAsync(requestUri, value);
+            result.EnsureSuccessStatusCode();
             return result;
         }
 
