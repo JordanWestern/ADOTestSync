@@ -126,7 +126,7 @@
                 try
                 {
                     await this.workItemTracker.DeleteTestCaseWorkItemAsync(workItem.Id);
-                    Log.Information("Deleted test case {0}: {1} successfully", workItem.Id, workItem.Fields[WorkItemFields.Title].ToString());
+                    Log.Information("Deleted test case ID {0}, Name: {1} successfully", workItem.Id, workItem.Fields[WorkItemFields.Title].ToString());
                 }
                 catch (Exception e)
                 {
