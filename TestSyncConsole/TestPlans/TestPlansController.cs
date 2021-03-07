@@ -118,5 +118,21 @@
                 }
             }
         }
+
+        public async Task DeleteTestCasesAsync(IEnumerable<WorkItem> workItems)
+        {
+            foreach (var workItem in workItems)
+            {
+                try
+                {
+                    await this.workItemTracker.DeleteTestCaseWorkItemAsync(workItem.Id);
+                    Log.Information("Deleted test case {0}: {1} successfully", workItem.Id, workItem.Fields[WorkItemFields.Title].ToString());
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "There was an issue deleting work item {0}", workItem.Id);
+                }
+            }
+        }
     }
 }

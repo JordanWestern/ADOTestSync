@@ -39,7 +39,11 @@
                 .UseSerilog()
                 .Build();
 
+            Log.Information("Execution starting");
+
             await ActivatorUtilities.CreateInstance<Executor>(host.Services).ExecuteAsync();
+
+            Log.Information("Execution complete");
         }
 
         private static void BuildConfiguration(IConfigurationBuilder configurationBuilder)

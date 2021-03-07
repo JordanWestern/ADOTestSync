@@ -46,6 +46,13 @@
             return result;
         }
 
+        public async Task<HttpResponseMessage> DeleteAsync(string requestUri)
+        {
+            var result = await this.httpClient.DeleteAsync(requestUri);
+            result.EnsureSuccessStatusCode();
+            return result;
+        }
+
         private HttpClientHandler ConfigureClientHandler(ILaunchSettings launchSettings)
         {
             var clientHandler = new HttpClientHandler();

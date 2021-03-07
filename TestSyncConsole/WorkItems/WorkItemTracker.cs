@@ -40,7 +40,20 @@
             try
             {
                 await this.azureService.PostAsync(
-                        $"{this.launchSettings.Arguments.Organisation}/{this.launchSettings.Arguments.Project}/_apis/wit/workitems/${workItemType}?api-version=6.0", new StringContent(JsonConvert.SerializeObject(jsonPatchOperations), Encoding.UTF8, "application/json-patch+json"));
+                    $"{this.launchSettings.Arguments.Organisation}/{this.launchSettings.Arguments.Project}/_apis/wit/workitems/${workItemType}?api-version=6.0", new StringContent(JsonConvert.SerializeObject(jsonPatchOperations), Encoding.UTF8, "application/json-patch+json"));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task DeleteTestCaseWorkItemAsync(int? testCaseId)
+        {
+            try
+            {
+                await this.azureService.DeleteAsync(
+                    $"{this.launchSettings.Arguments.Organisation}/{this.launchSettings.Arguments.Project}/_apis/test/testcases/{testCaseId}?api-version=6.0-preview.1");
             }
             catch (Exception e)
             {

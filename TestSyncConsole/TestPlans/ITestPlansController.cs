@@ -7,6 +7,9 @@
     public interface ITestPlansController
     {
         Task<IEnumerable<WorkItem>> GetAutomatedTestCasesAsync();
+
         Task UploadTestCasesAsync(IEnumerable<UITest> uITests);
+
+        Task DeleteTestCasesAsync(IEnumerable<WorkItem> enumerable);
     }
 }

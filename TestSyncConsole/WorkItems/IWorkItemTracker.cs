@@ -9,6 +9,8 @@
     {
         Task CreateWorkItemAsync(JsonPatchDocument jsonPatchOperations, string workItemType);
 
+        Task DeleteTestCaseWorkItemAsync(int? testCaseId);
+
         Task<WorkItemBatchGetResponse> PostWorkItemBatchQueryAsync(WorkItemBatchGetRequest workItemBatchGetRequest);
 
         Task<WorkItemQueryResult> PostWorkItemQueryAsync(Wiql workItemQueryLanguage);
