@@ -38,7 +38,7 @@
 
             if (notInAssemblyCount == 0 && notInAzureCount == 0)
             {
-                Log.Information("Your test project and Azure are in sync so no action is required");
+                Log.Information("Your test assembly and Azure are in sync, so no action is required.");
                 return;
             }
 
@@ -49,7 +49,7 @@
             }
             else
             {
-                Log.Information("Azure is up to date with your test project");
+                Log.Information("Azure already contains all the tests tha texists in your test assembly. skipped.");
             }
 
             if (notInAssemblyCount > 0)
@@ -59,7 +59,7 @@
             }
             else
             {
-                Log.Information("Azure does not contain anything that does not exist in your test assembly");
+                Log.Information("Azure does not contain anything that may have been removed from in your test assembly. skipped.");
             }
         }
     }
