@@ -1,5 +1,9 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+A tool designed to be able to achieve the following:
+
+1. Bulk upload/reconsile .net based UI tests into Azure DevOps so that they can be executed via the test plans feature
+2. Designed to be either executed locally, or via a build pipeline.
+3. Extendable for multiple test runnners (NUnit, Specflow+ Runner)
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
